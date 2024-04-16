@@ -77,16 +77,20 @@ impl Block {
     }
     pub fn to_output_string(&self) -> String {
         let mut output = String::new();
+        let mut header= String::new();
 
-        // Serialize block header to JSON
-        let header_json = serde_json::to_string(&self.block_header).unwrap();
-
+        header.push_str(&int_to_hex(self.block_header.version));
+        header.push_str(&format!("{}", self.block_header.previous_block_hash));
+        header.push_str(&format!("{}", self.block_header.merkle_root));
+        header.push_str(&int_to_hex(self.block_header.timestamp as u32));
+        header.push_str(&format!("{}", self.block_header.bits));
+        header.push_str(&int_to_hex(self.block_header.nonce));
         // Format block header
-        output += &format!("{}\n\n", header_json);
+        output += &format!("{}\n", header);
 
         // Format transaction IDs
         for txid in &self.transactions_ids {
-            output += &format!("{}\n", txid);
+            output += &format!("\n{}", txid);
         }
 
         output
@@ -439,7 +443,7 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
 
     // Generate random height and previous block hash
     let height = rand::thread_rng().gen::<u64>();
-    let previous_block_hash = format!("{:x}", rand::thread_rng().gen::<u128>());
+    let previous_block_hash = format!("{}", "cc9b3c7b8f82c04b4f10129f0a1812ffabc04e3b2385da030000000000000000");
 
     // Create a block with the generated parameters
     let mut block = Block::new(previous_block_hash.clone(), height, merkle_root.clone(), transaction_hashes);
