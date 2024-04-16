@@ -457,18 +457,19 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
         // Check if the block hash meets the difficulty target
         if block_hash < block.block_header.bits {
             // If the hash is less than the difficulty target, return the block
-            return block;
+            break;
         } else {
             // If the hash is greater than or equal to the difficulty target, increment the nonce and try again
             nonce_ += 1;
         }
 
         // Check if the elapsed time is greater than or equal to 9 minutes and 55 seconds
-        if start_time.elapsed() >= Duration::from_secs(595) {
+        if start_time.elapsed() >= Duration::from_secs(300) {
             // If the time constraint is reached, return the block
-            return block;
+            break;
         }
     }
+    return block
 }
 
 fn validation_transaction(transactions: &Vec<Transaction>)->Vec<Transaction>{
@@ -641,7 +642,7 @@ fn main()->std::io::Result<()>{
     let transactions = fetch_transactions_from_mempool();
     let valid_transactions = validation_transaction(&transactions);
     let block = mine_block(&valid_transactions);
-    let file = File::create("../output.txt")?;
+    let file = File::create("output.txt")?;
 
     // Create a buffered writer to write to the file
     let mut writer = BufWriter::new(file);
