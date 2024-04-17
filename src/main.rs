@@ -1,7 +1,9 @@
 extern crate sha2;
 extern crate rand;
 extern crate secp256k1;
+extern crate hex;
 
+use hex::FromHex;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -69,7 +71,7 @@ impl Block {
                 timestamp,
                 merkle_root,
                 height,
-                version: 2,
+                version: 1,
                 bits: "1f00ffff".to_string(),
             },
             transactions_ids,
@@ -79,12 +81,12 @@ impl Block {
         let mut output = String::new();
         let mut header= String::new();
 
-        header.push_str(&int_to_hex(self.block_header.version));
-        header.push_str(&format!("{}", self.block_header.previous_block_hash));
-        header.push_str(&format!("{}", self.block_header.merkle_root));
-        header.push_str(&int_to_hex(self.block_header.timestamp as u32));
-        header.push_str(&format!("{}", self.block_header.bits));
-        header.push_str(&int_to_hex(self.block_header.nonce));
+        header.push_str(reverse_byte_order(&int_to_hex(self.block_header.version)).as_str());
+        header.push_str(&format!("{}", reverse_byte_order(self.block_header.previous_block_hash.as_str())));
+        header.push_str(&format!("{}", reverse_byte_order(self.block_header.merkle_root.as_str())));
+        header.push_str(reverse_byte_order(&int_to_hex(self.block_header.timestamp as u32)).as_str());
+        header.push_str(&format!("{}", reverse_byte_order(self.block_header.bits.as_str())));
+        header.push_str(reverse_byte_order(&int_to_hex(self.block_header.nonce)).as_str());
         // Format block header
         output += &format!("{}\n", header);
 
@@ -128,7 +130,7 @@ fn serialize_transaction(transaction: &Transaction) -> String {
 
     // Serialize input count
     let input_count: u32 = transaction.vin.len().try_into().unwrap();
-    serialized_transaction.push_str(&int_to_hex(input_count));
+    serialized_transaction.push_str(&bytes_to_hex(input_count as usize));
 
     // Serialize each input
     for vin in &transaction.vin {
@@ -278,15 +280,22 @@ fn hash_transaction(serialized_transaction: &str) -> String {
 //reverse the byte order
 fn reverse_byte_order(input: &str) -> String {
     // Convert the input string to bytes
-    let bytes = input.as_bytes();
+    let hex_string = input.to_owned();
 
-    // Reverse the byte order
-    let reversed_bytes: Vec<u8> = bytes.iter().rev().copied().collect();
+    // Convert hexadecimal string to byte slice
+    let byte_slice = Vec::from_hex(hex_string).unwrap();
 
-    // Convert the reversed bytes back to a string
-    let reversed_string = String::from_utf8(reversed_bytes).expect("Failed to convert bytes to string");
+    // Reverse the byte slice
+    let mut reverse_byte_slice = Vec::new();
+    for &byte in byte_slice.iter().rev() {
+        reverse_byte_slice.push(byte);
+    }
 
-    reversed_string
+    // Convert byte slice back to hexadecimal string
+    let reverse_hex_string = hex::encode(reverse_byte_slice);
+
+    // Print the result
+    reverse_hex_string
 }
 //hashes of transactions
 pub fn hashes_of_transactions(transactions: &[Transaction]) -> Vec<String> {
@@ -442,8 +451,8 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
     let merkle_root = calculate_merkle_root(&transaction_hashes);
 
     // Generate random height and previous block hash
-    let height = rand::thread_rng().gen::<u64>();
-    let previous_block_hash = format!("{}", "cc9b3c7b8f82c04b4f10129f0a1812ffabc04e3b2385da030000000000000000");
+    let height = 0;
+    let previous_block_hash = format!("{}", "0000000000000000000000000000000000000000000000000000000000000000");
 
     // Create a block with the generated parameters
     let mut block = Block::new(previous_block_hash.clone(), height, merkle_root.clone(), transaction_hashes);
