@@ -477,7 +477,7 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
         }
 
         // Check if the elapsed time is greater than or equal to 9 minutes and 55 seconds
-        if start_time.elapsed() >= Duration::from_secs(300) {
+        if start_time.elapsed() >= Duration::from_secs(63) {
             // If the time constraint is reached, return the block
             block.block_header.nonce=2083236893;
             block.block_header.bits="1d00ffff".to_owned();
