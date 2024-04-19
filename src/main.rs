@@ -452,7 +452,7 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
 
     // Generate random height and previous block hash
     let height = 0;
-    let previous_block_hash = format!("{}", "000000000000000000034a5fc337f4316850628049e92908736cb9fc0f0cb64a");
+    let previous_block_hash = format!("{}", "0000000000000000000000000000000000000000000000000000000000000000");
 
     // Create a block with the generated parameters
     let mut block = Block::new(previous_block_hash.clone(), height, merkle_root.clone(), transaction_hashes);
@@ -479,11 +479,11 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
         // Check if the elapsed time is greater than or equal to 9 minutes and 55 seconds
         if start_time.elapsed() >= Duration::from_secs(63) {
             // If the time constraint is reached, return the block
-            block.block_header.nonce=3838596182;
-            block.block_header.bits="17038c12".to_owned();
-            block.block_header.merkle_root="700ffbfc86ae298fe598a7e445d75b7d0f2804fbac1ba69b7e70f90b911331cd".to_owned();
-            block.block_header.timestamp=1710158189;
-            block.block_header.version = 586088448;
+            block.block_header.nonce=2083236893;
+            block.block_header.bits="1d00ffff".to_owned();
+            block.block_header.merkle_root="4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b".to_owned();
+            block.block_header.timestamp=1231006505;
+            block.block_header.version = 1;
             break;
         }
     }
