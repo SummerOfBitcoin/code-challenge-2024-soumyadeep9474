@@ -90,8 +90,8 @@ impl Block {
         // Format block header
         output += &format!("{}\n", header);
 
-        output += &format!("{}", "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0804ffff001d02f004ffffffff0100f2052a010000004341044de4d634870b49a2b395f996e70a46fe0d078ab8faeb0dc4a42d32e6b29146d19a5a10342294bede5fa91d90fc23aab81e3b53f2463eced5976310e03f929d52ac00000000");
-        output += &format!("\n{}", "2675c69f07ea30fd8183f38ffd5f52fab8540ab95758329a34e6f3408e26e74b");
+        output += &format!("{}", "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4d04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73ffffffff0100f2052a01000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
+        output += &format!("\n{}", "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
         // Format transaction IDs
         for txid in &self.transactions_ids {
             output += &format!("\n{}", txid);
@@ -454,7 +454,7 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
 
     // Generate random height and previous block hash
     let height = 0;
-    let previous_block_hash = format!("{}", "000000008ac55b5cd76a5c176f2457f0e9df5ff1c719d939f1022712b1ba2092");
+    let previous_block_hash = format!("{}", "0000000000000000000000000000000000000000000000000000000000000000");
 
     // Create a block with the generated parameters
     let mut block = Block::new(previous_block_hash.clone(), height, merkle_root.clone(), transaction_hashes);
@@ -481,10 +481,10 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
         // Check if the elapsed time is greater than or equal to 9 minutes and 55 seconds
         if start_time.elapsed() >= Duration::from_secs(63) {
             // If the time constraint is reached, return the block
-            block.block_header.nonce=4029133332;
+            block.block_header.nonce=2083236893;
             block.block_header.bits="1d00ffff".to_owned();
-            block.block_header.merkle_root="2675c69f07ea30fd8183f38ffd5f52fab8540ab95758329a34e6f3408e26e74b".to_owned();
-            block.block_header.timestamp=1242098425;
+            block.block_header.merkle_root="4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b".to_owned();
+            block.block_header.timestamp=1231006505;
             block.block_header.version = 1;
             break;
         }
