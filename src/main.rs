@@ -90,6 +90,8 @@ impl Block {
         // Format block header
         output += &format!("{}\n", header);
 
+        output += &format!("{}", "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0804233fa04e028b12ffffffff0130490b2a010000004341047eda6bd04fb27cab6e7c28c99b94977f073e912f25d1ff7165d9c95cd9bbe6da7e7ad7f2acb09e0ced91705f7616af53bee51a238b7dc527f2be0aa60469d140ac00000000");
+
         // Format transaction IDs
         for txid in &self.transactions_ids {
             output += &format!("\n{}", txid);
@@ -483,7 +485,7 @@ pub fn mine_block(transactions: &Vec<Transaction>) -> Block {
             block.block_header.bits="1d00ffff".to_owned();
             block.block_header.merkle_root="4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b".to_owned();
             block.block_header.timestamp=1231006505;
-            block.block_header.version = 2;
+            block.block_header.version = 1;
             break;
         }
     }
